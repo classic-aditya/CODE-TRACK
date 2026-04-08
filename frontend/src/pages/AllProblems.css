@@ -1,0 +1,26 @@
+.all-problems-wrapper { max-width: 1000px; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.page-title { font-size: 26px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+.page-subtitle { color: #6b7280; margin: 0; font-size: 14px; }
+
+.add-new-btn {
+  padding: 10px 20px;
+  background: #1a6b3c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.add-new-btn:hover { background: #145530; }
+
+.loading-text { color: #6b7280; font-size: 15px; }
