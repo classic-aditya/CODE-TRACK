@@ -41,6 +41,8 @@ const Login = () => {
     }
   };
 
+  const {name, email, password} = form;
+
   return (
     <div className="login-page">
       <div className="login-card">
@@ -72,7 +74,7 @@ const Login = () => {
               type="text"
               name="name"
               placeholder="Full Name"
-              value={form.name}
+              value={name}
               onChange={handleChange}
               required
             />
@@ -82,7 +84,7 @@ const Login = () => {
             type="email"
             name="email"
             placeholder="Email"
-            value={form.email}
+            value={email}
             onChange={handleChange}
             required
           />
@@ -91,7 +93,7 @@ const Login = () => {
             type="password"
             name="password"
             placeholder="Password"
-            value={form.password}
+            value={password}
             onChange={handleChange}
             required
           />

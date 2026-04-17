@@ -77,7 +77,6 @@ const ViewProblems = () => {
     <div className="view-problems-wrapper">
       <header className="view-header">
         <div className="title-stack">
-          <button className="back-btn" onClick={() => navigate('/problem-sets')}>← Back to Sets</button>
           <h1 className="view-title">{set?.name?.toUpperCase()}</h1>
           <p className="view-subtitle">{(set?.problems || []).length} problems in this set</p>
         </div>

@@ -17,12 +17,15 @@ const ProblemDetail = () => {
 
   useEffect(() => {
     getProblemById(id)
-      .then((res) => setProblem(res.data.data))
-      .catch(() => { alert('Problem not found.'); navigate('/all-problems'); })
+      .then((res) => setProblem(res.data?.data || res.data))
+      .catch(() => { 
+        alert('Problem not found.'); 
+        navigate('/all-problems'); 
+      })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, navigate]); 
 
-  if (loading) return <div className="loading-text">Loading...</div>;
+  if (loading) return <div className="loading-text">Loading problem details...</div>;
   if (!problem) return null;
 
   const platformName = PLATFORM_NAMES[problem.platform] || problem.platform;
@@ -37,16 +40,16 @@ const ProblemDetail = () => {
           ✏️ Edit Details
         </button>
       </div>
-
-      {/* Info table */}
       <div className="detail-card">
         <div className="detail-row">
           <span className="detail-key">Platform</span>
-          <span className={`detail-platform platform-${problem.platform}`}>{platformName}</span>
+          <span className={`detail-platform platform-${(problem.platform || '').toLowerCase()}`}>
+            {platformName}
+          </span>
         </div>
         <div className="detail-row">
           <span className="detail-key">Difficulty</span>
-          <span className={`badge diff-${problem.difficulty}`}>
+          <span className={`badge diff-${(problem.difficulty || '').toLowerCase()}`}>
             {problem.difficulty?.charAt(0).toUpperCase() + problem.difficulty?.slice(1)}
           </span>
         </div>
@@ -60,12 +63,11 @@ const ProblemDetail = () => {
           </div>
         </div>
       </div>
-
-      {/* Approach section */}
       {(problem.approach || problem.timeComplexity || problem.spaceComplexity) && (
         <div className="detail-section">
-          <h2 className="detail-section-title">My Approach!</h2>
+          <h2 className="detail-section-title">My Approach</h2>
           {problem.approach && <p className="detail-approach">{problem.approach}</p>}
+          
           {(problem.timeComplexity || problem.spaceComplexity) && (
             <div className="complexity-row">
               <div className="complexity-card">
@@ -80,8 +82,6 @@ const ProblemDetail = () => {
           )}
         </div>
       )}
-
-      {/* External link */}
       {problem.problemLink && (
         <a href={problem.problemLink} target="_blank" rel="noreferrer" className="detail-link-btn">
           View Problem on {platformName} ↗

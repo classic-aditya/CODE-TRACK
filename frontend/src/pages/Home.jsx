@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <div className="home-wrapper">
       <div className="home-hero">
-        <h1>Welcome back{user?.displayName ? `, ${user.displayName.split(' ')[0]}` : ''}! </h1>
+        <h1>Welcome {user?.displayName ? `, ${user.displayName.split(' ')[0]}` : ''}! </h1>
         <p>Keep pushing — consistency beats intensity.</p>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; 
 import { deleteProblem } from '../services/api';
 import './ProblemTable.css';
 
@@ -69,36 +69,41 @@ const ProblemTable = ({ problems, onDelete, showDelete = true }) => {
           </thead>
           <tbody>
             {filtered.length > 0 ? (
-              filtered.map((p) => (
-                <tr key={p._id}>
+              filtered.map(({ _id, title, platform = '', difficulty = '', tags = [] }) => (
+                <tr key={_id}>
                   <td>✅</td>
+                  
                   <td className="problem-title">
-                    <span onClick={() => navigate(`/problem/${p._id}`)}>
-                      {p.title}
-                    </span>
+                    <Link to={`/problem/${_id}`}>
+                      {title}
+                    </Link>
                   </td>
+                  
                   <td>
-                    <span className={`badge platform-${(p.platform || '').toLowerCase()}`}>
-                      {p.platform}
+                    <span className={`badge platform-${platform.toLowerCase()}`}>
+                      {platform}
                     </span>
                   </td>
+                  
                   <td>
-                    <span className={`badge diff-${(p.difficulty || '').toLowerCase()}`}>
-                      {p.difficulty}
+                    <span className={`badge diff-${difficulty.toLowerCase()}`}>
+                      {difficulty}
                     </span>
                   </td>
+                  
                   <td>
                     <div className="tag-list">
-                      {(p.tags || []).map((tag, i) => (
+                      {tags.map((tag, i) => (
                         <span key={i} className="tag-item">#{tag}</span>
                       ))}
                     </div>
                   </td>
+                  
                   {showDelete && (
                     <td>
                       <div className="action-group">
-                        <button className="btn-edit" onClick={() => navigate(`/add-problem?edit=${p._id}`)}>✏️</button>
-                        <button className="btn-delete" onClick={() => handleDelete(p._id)}>🗑️</button>
+                        <button className="btn-edit" onClick={() => navigate(`/add-problem?edit=${_id}`)}>✏️</button>
+                        <button className="btn-delete" onClick={() => handleDelete(_id)}>🗑️</button>
                       </div>
                     </td>
                   )}

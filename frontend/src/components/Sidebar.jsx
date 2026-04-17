@@ -1,10 +1,12 @@
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, List, Grid, PlusCircle, User, LogOut } from 'lucide-react';
+import { Home, List, LayoutGrid, PlusSquare, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/Code_Tracker.jpeg';
 import './Sidebar.css';
 
 const Sidebar = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -12,52 +14,40 @@ const Sidebar = () => {
     navigate('/login');
   };
 
-  const navItems = [
-    { to: '/', label: 'Home', icon: Home },
-    { to: '/all-problems', label: 'All Problems', icon: List },
-    { to: '/problem-sets', label: 'Problem Sets', icon: Grid },
-    { to: '/add-problem', label: 'Add Problem', icon: PlusCircle },
-    { to: '/profile', label: 'Profile', icon: User },
-  ];
-
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
-        <span className="brand-logo">CT</span>
-        <span className="brand-name">CodeTrack</span>
+    <div className="sidebar">
+      
+      <div className="logo-container" >
+        <img className="logo-img" src={logo} alt="Code Track Logo" />
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <Icon size={18} />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+        <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
+          <Home size={20} /> Home
+        </NavLink>
+        
+        <NavLink to="/all-problems" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <List size={20} /> All Problems
+        </NavLink>
+        
+        <NavLink to="/problem-sets" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <LayoutGrid size={20} /> Problem Sets
+        </NavLink>
+        
+        <NavLink to="/add-problem" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <PlusSquare size={20} /> Add Problem
+        </NavLink>
+        
+        <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <User size={20} /> Profile
+        </NavLink>
       </nav>
 
-      <div className="sidebar-footer">
-        {user && (
-          <div className="sidebar-user">
-            <div className="user-avatar">
-              {user.photoURL
-                ? <img src={user.photoURL} alt="avatar" />
-                : <span>{(user.displayName || user.email || 'U')[0].toUpperCase()}</span>
-              }
-            </div>
-            <span className="user-name">{user.displayName || user.email}</span>
-          </div>
-        )}
-        <button className="logout-btn" onClick={handleLogout}>
-          <LogOut size={16} /> Logout
-        </button>
-      </div>
-    </aside>
+      <button className="logout-btn" onClick={handleLogout} style={{ marginTop: 'auto' }}>
+        <LogOut size={20} /> Logout
+      </button>
+      
+    </div>
   );
 };
 

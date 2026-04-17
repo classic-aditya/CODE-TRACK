@@ -12,7 +12,7 @@ const AllProblems = () => {
   const fetchProblems = async () => {
     try {
       const res = await getProblems();
-      setProblems(res.data.data);
+      setProblems(res.data?.data || res.data || []); 
     } catch {
       alert('Failed to load problems.');
     } finally {

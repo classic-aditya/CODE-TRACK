@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { createProblem, updateProblem, getProblems } from '../services/api';
+import { createProblem, updateProblem, getProblemById } from '../services/api';
 import './AddProblem.css';
 
 const blank = {
@@ -18,26 +18,21 @@ const AddProblem = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const id = params.get('edit');
+    const id = new URLSearchParams(location.search).get('edit');
     if (!id) return;
     setIsEditing(true);
     setEditId(id);
-    getProblems().then((res) => {
-      const p = res.data.data.find((x) => x._id === id);
-      if (p) setForm({ ...blank, ...p });
-    });
+    getProblemById(id)
+      .then((res) => setForm({ ...blank, ...(res.data?.data || res.data) }))
+      .catch((err) => console.error(err));
   }, [location.search]);
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (isEditing) {
-        await updateProblem(editId, form);
-      } else {
-        await createProblem(form);
-      }
+      isEditing ? await updateProblem(editId, form) : await createProblem(form);
       navigate('/all-problems');
     } catch (err) {
       alert(err.response?.data?.message || 'Something went wrong');
@@ -45,16 +40,37 @@ const AddProblem = () => {
       setLoading(false);
     }
   };
-
-  const addTag = () => {
-    const t = tagInput.trim();
-    if (t && !form.tags.includes(t)) {
-      setForm({ ...form, tags: [...form.tags, t] });
+  const handleTags = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const t = tagInput.trim();
+      if (t && !form.tags.includes(t)) setForm({ ...form, tags: [...form.tags, t] });
+      setTagInput('');
     }
-    setTagInput('');
   };
-
   const removeTag = (tag) => setForm({ ...form, tags: form.tags.filter((t) => t !== tag) });
+
+  const renderInput = (label, name, placeholder, type = "text") => (
+    <section className="input-group">
+      <label className="input-label">{label}</label>
+      <input type={type} name={name} className="text-input" placeholder={placeholder} value={form[name]} onChange={handleChange} required={name === 'title'} />
+    </section>
+  );
+
+  const renderToggles = (label, name, options) => (
+    <section className="input-group">
+      <label className="input-label">{label}</label>
+      <div className="toggle-group">
+        {options.map((opt) => (
+          <button key={opt.value} type="button" 
+            className={`toggle-btn ${name === 'difficulty' ? `btn-${opt.value}` : ''} ${form[name] === opt.value ? 'active' : ''}`}
+            onClick={() => setForm({ ...form, [name]: opt.value })}>
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
 
   return (
     <div className="form-page-wrapper">
@@ -63,120 +79,37 @@ const AddProblem = () => {
       </header>
 
       <form className="form-container" onSubmit={handleSubmit}>
-        <section className="input-group">
-          <label className="input-label">Title</label>
-          <input
-            type="text"
-            className="text-input"
-            placeholder="Enter problem title"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            required
-          />
-        </section>
+        
+       
+        {renderInput('Title', 'title', 'Enter problem title')}
+        
+        {renderToggles('Platform', 'platform', [
+          { label: 'LeetCode', value: 'leetcode' },
+          { label: 'Codeforces', value: 'codeforces' },
+          { label: 'GeeksforGeeks', value: 'geeksforgeeks' }
+        ])}
 
-        <section className="input-group">
-          <label className="input-label">Platform</label>
-          <div className="toggle-group">
-            {['leetcode', 'codeforces', 'geeksforgeeks'].map((p) => (
-              <button
-                key={p}
-                type="button"
-                className={`toggle-btn ${form.platform === p ? 'active' : ''}`}
-                onClick={() => setForm({ ...form, platform: p })}
-              >
-                {p === 'leetcode' ? 'LeetCode' : p === 'codeforces' ? 'Codeforces' : 'GeeksforGeeks'}
-              </button>
-            ))}
-          </div>
-        </section>
+        {renderToggles('Difficulty', 'difficulty', [
+          { label: 'Easy', value: 'easy' },
+          { label: 'Medium', value: 'medium' },
+          { label: 'Hard', value: 'hard' }
+        ])}
 
-        <section className="input-group">
-          <label className="input-label">Difficulty</label>
-          <div className="toggle-group">
-            {['easy', 'medium', 'hard'].map((d) => (
-              <button
-                key={d}
-                type="button"
-                className={`toggle-btn btn-${d} ${form.difficulty === d ? 'active' : ''}`}
-                onClick={() => setForm({ ...form, difficulty: d })}
-              >
-                {d.charAt(0).toUpperCase() + d.slice(1)}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="input-group">
-          <label className="input-label">Problem Link</label>
-          <input
-            type="url"
-            className="text-input"
-            placeholder="https://..."
-            value={form.problemLink}
-            onChange={(e) => setForm({ ...form, problemLink: e.target.value })}
-          />
-        </section>
-
+        {renderInput('Problem Link', 'problemLink', 'https://...', 'url')}
         <section className="input-group">
           <label className="input-label">Tags</label>
           <div className="tag-input-row">
-            <input
-              type="text"
-              className="text-input"
-              placeholder="e.g. Array, DP, Graph"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-            />
-            <button type="button" className="tag-add-btn" onClick={addTag}>Add</button>
+            <input type="text" className="text-input" placeholder="e.g. Array, DP (Press Enter)" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={handleTags} />
           </div>
           <div className="toggle-group" style={{ marginTop: '8px' }}>
             {form.tags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className="toggle-btn active-tag"
-                onClick={() => removeTag(tag)}
-              >
-                {tag} ✕
-              </button>
+              <button key={tag} type="button" className="toggle-btn active-tag" onClick={() => removeTag(tag)}>{tag} ✕</button>
             ))}
           </div>
         </section>
-
-        <section className="input-group">
-          <label className="input-label">Approach</label>
-          <input
-            type="text"
-            className="text-input"
-            placeholder="e.g. Two Pointer / DP"
-            value={form.approach}
-            onChange={(e) => setForm({ ...form, approach: e.target.value })}
-          />
-        </section>
-
-        <section className="input-group">
-          <label className="input-label">Time Complexity</label>
-          <input
-            type="text"
-            className="text-input"
-            placeholder="e.g. O(n log n)"
-            value={form.timeComplexity}
-            onChange={(e) => setForm({ ...form, timeComplexity: e.target.value })}
-          />
-        </section>
-
-        <section className="input-group">
-          <label className="input-label">Space Complexity</label>
-          <input
-            type="text"
-            className="text-input"
-            placeholder="e.g. O(1)"
-            value={form.spaceComplexity}
-            onChange={(e) => setForm({ ...form, spaceComplexity: e.target.value })}
-          />
-        </section>
+        {renderInput('Approach', 'approach', 'e.g. Two Pointer / DP')}
+        {renderInput('Time Complexity', 'timeComplexity', 'e.g. O(n log n)')}
+        {renderInput('Space Complexity', 'spaceComplexity', 'e.g. O(1)')}
 
         <footer className="form-footer">
           <button type="submit" className="submit-btn" disabled={loading}>

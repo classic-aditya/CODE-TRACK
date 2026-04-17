@@ -9,13 +9,6 @@
 
 .title-stack { display: flex; flex-direction: column; gap: 4px; }
 
-.back-btn {
-  background: none; border: none; color: #1a6b3c;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  padding: 0; margin-bottom: 4px; width: fit-content;
-}
-.back-btn:hover { text-decoration: underline; }
-
 .view-title { font-size: 24px; font-weight: 800; color: #1a1a2e; margin: 0; letter-spacing: 0.5px; }
 .view-subtitle { color: #6b7280; font-size: 14px; margin: 0; }
 
