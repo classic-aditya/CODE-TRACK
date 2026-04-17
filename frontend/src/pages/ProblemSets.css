@@ -4,15 +4,15 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
-.page-title { font-size: 26px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+.page-title { font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
 .page-subtitle { color: #6b7280; margin: 0; font-size: 14px; }
 
 .add-new-btn {
   padding: 10px 20px;
-  background: #1a6b3c;
+  background: #1d4ed8;
   color: white;
   border: none;
   border-radius: 10px;
@@ -22,29 +22,29 @@
   white-space: nowrap;
   transition: background 0.18s;
 }
-.add-new-btn:hover { background: #145530; }
+.add-new-btn:hover { background: green; }
 
 .loading-text { color: #6b7280; font-size: 15px; }
 
 .sets-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
+  gap: 24px;
 }
 
 .set-card {
   background: white;
   border-radius: 14px;
   padding: 22px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  border: 1.5px solid #f0f0f0;
+  box-shadow: 0 1px 4px gray;
+  border: 1.5px solid #7d8590;
   display: flex;
   flex-direction: column;
   gap: 8px;
   transition: box-shadow 0.18s, transform 0.18s;
 }
 
-.set-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); transform: translateY(-2px); }
+.set-card:hover { box-shadow: 0 6px 20px gray; transform: translateY(-2px); }
 
 .set-card-header {
   display: flex;
@@ -52,20 +52,20 @@
   align-items: flex-start;
 }
 
-.set-title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
-.set-delete-btn { background: none; border: none; cursor: pointer; font-size: 15px; opacity: 0.5; transition: opacity 0.15s; }
+.set-title { font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 0; }
+.set-delete-btn { background: none; color: red; border: none; cursor: pointer; font-size: 25px; opacity: 0.5; transition: opacity 0.15s; }
 .set-delete-btn:hover { opacity: 1; }
 .set-desc { font-size: 13px; color: #6b7280; margin: 0; line-height: 1.5; }
-.set-count { font-size: 13px; color: #1a6b3c; font-weight: 600; margin: 0; }
+.set-count { font-size: 15px; color: blue; font-weight: 600; margin: 0; }
 
 .view-set-btn {
   margin-top: 8px;
   width: 100%;
   padding: 9px;
   background: transparent;
-  border: 1.5px solid #1a6b3c;
+  border: 1.5px solid #7d8590;
   border-radius: 8px;
-  color: #1a6b3c;
+  /* color: black; */
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;

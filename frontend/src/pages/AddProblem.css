@@ -1,10 +1,11 @@
 .form-page-wrapper { max-width: 560px; }
 
 .form-header { margin-bottom: 24px; }
-.header-title { font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0; }
+.header-title { font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 0; }
 
 .form-container {
   background: white;
+   border: 1px solid #30363d;
   border-radius: 16px;
   padding: 28px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.07);
@@ -19,7 +20,7 @@
 
 .text-input {
   padding: 11px 14px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid #30363d;
   border-radius: 10px;
   font-size: 14px;
   outline: none;
@@ -27,13 +28,13 @@
   width: 100%;
   box-sizing: border-box;
 }
-.text-input:focus { border-color: #1a6b3c; }
+.text-input:focus { border-color: blue; }
 
-.toggle-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.toggle-group { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .toggle-btn {
   padding: 7px 16px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid  #30363d;
   border-radius: 20px;
   background: white;
   font-size: 13px;
@@ -42,12 +43,30 @@
   transition: all 0.15s;
   color: #374151;
 }
-.toggle-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
-.toggle-btn.active-tag { background: #1a6b3c; color: white; border-color: #1a6b3c; font-size: 12px; }
+.toggle-btn:hover {
+  background-color: green;
+  color: white;
+}
+.toggle-btn.active { background: green; color: white; border-color: darkgreen; }
+.toggle-btn.active-tag { background: green; color: white; border-color: #1a6b3c; font-size: 12px; }
 
-.btn-easy.active { background: #dcfce7; color: #166534; border-color: #86efac; }
-.btn-medium.active { background: #fef9c3; color: #854d0e; border-color: #fde047; }
-.btn-hard.active { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.btn-easy.active {
+  color: #4ade80;
+  border-color: #4ade80;
+  background-color: rgba(74, 222, 128, 0.1);
+}
+
+.btn-medium.active {
+  color: #facc15;
+  border-color: #facc15;
+  background-color: rgba(250, 204, 21, 0.1);
+}
+
+.btn-hard.active {
+  color: #f87171;
+  border-color: #f87171;
+  background-color: rgba(248, 113, 113, 0.1);
+}
 
 .tag-input-row { display: flex; gap: 8px; }
 .tag-add-btn {
@@ -68,8 +87,8 @@
 
 .submit-btn {
   width: 100%;
-  padding: 13px;
-  background: #1a6b3c;
+  padding: 14px;
+  background: blue;
   color: white;
   border: none;
   border-radius: 10px;
@@ -78,5 +97,5 @@
   cursor: pointer;
   transition: background 0.18s;
 }
-.submit-btn:hover { background: #145530; }
+.submit-btn:hover { background: green; }
 .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -70,7 +70,7 @@ const ProblemSets = () => {
                   className="set-delete-btn"
                   onClick={() => handleDelete(set._id)}
                   title="Delete set"
-                >🗑️</button>
+                >X</button>
               </div>
               <p className="set-desc">{set.description || 'No description.'}</p>
               <p className="set-count">{(set.problems || []).length} Problems</p>
