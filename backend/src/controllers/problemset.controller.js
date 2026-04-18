@@ -37,7 +37,10 @@ const createProblemSet = asyncHandler(async (req, res) => {
 // PUT /api/problem-sets/:id
 const updateProblemSet = asyncHandler(async (req, res) => {
   const userId = getUserId(req);
-  const set = await ProblemSet.findOneAndUpdate({ _id: req.params.id, userId }, req.body, { new: true, runValidators: true });
+  const set = await ProblemSet.findOneAndUpdate(
+    { _id: req.params.id, userId }, 
+    req.body,
+    { new: true, runValidators: true });
   if (!set) throw new ApiError(404, "Problem set not found");
   res.status(200).json(new ApiResponse(200, set, "Problem set updated"));
 });

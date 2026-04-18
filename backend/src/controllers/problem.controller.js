@@ -37,16 +37,23 @@ const getProblemById = asyncHandler(async (req, res) => {
 // POST /api/problems
 const createProblem = asyncHandler(async (req, res) => {
   const userId = getUserId(req);
-  const { title, platform, difficulty, problemLink, tags, approach, timeComplexity, spaceComplexity } = req.body;
-  if (!title || !platform || !difficulty) throw new ApiError(400, "title, platform, and difficulty are required");
-  const problem = await Problem.create({ userId, title, platform, difficulty, problemLink, tags, approach, timeComplexity, spaceComplexity });
+  const { title, platform, difficulty, problemLink, tags, approach,timeComplexity, spaceComplexity } = req.body;
+  if (!title || !platform || !difficulty){
+    throw new ApiError(400, "title, platform, and difficulty are required")
+  };
+  const problem = await Problem.create({ 
+    userId, title, platform, difficulty, problemLink, tags, approach, timeComplexity, spaceComplexity
+  });
   res.status(201).json(new ApiResponse(201, problem, "Problem created"));
 });
 
 // PUT /api/problems/:id
 const updateProblem = asyncHandler(async (req, res) => {
   const userId = getUserId(req);
-  const problem = await Problem.findOneAndUpdate({ _id: req.params.id, userId }, req.body, { new: true, runValidators: true });
+  const problem = await Problem.findOneAndUpdate( 
+    {_id: req.params.id, userId }, 
+    req.body, 
+    { new: true, runValidators: true });
   if (!problem) throw new ApiError(404, "Problem not found");
   res.status(200).json(new ApiResponse(200, problem, "Problem updated"));
 });
