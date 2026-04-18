@@ -1,10 +1,5 @@
 .detail-wrapper { max-width: 760px; }
 
-.back-btn {
-  background: none; border: none; color: #1a6b3c;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  padding: 0; margin-bottom: 16px; display: block;
-}
 .back-btn:hover { text-decoration: underline; }
 
 .detail-header {

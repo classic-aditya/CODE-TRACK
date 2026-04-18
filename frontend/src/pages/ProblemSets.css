@@ -125,7 +125,7 @@
 .modal-submit {
   flex: 1;
   padding: 10px;
-  background: #1a6b3c;
+  background: blue;
   color: white;
   border: none;
   border-radius: 8px;
@@ -134,5 +134,5 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.modal-submit:hover { background: #145530; }
+.modal-submit:hover { background: green; }
 .modal-submit:disabled { opacity: 0.6; }

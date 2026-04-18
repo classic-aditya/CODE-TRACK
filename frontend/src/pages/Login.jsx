@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/Code_Tracker.jpeg';
 import './Login.css';
 
 const Login = () => {
@@ -47,8 +48,9 @@ const Login = () => {
     <div className="login-page">
       <div className="login-card">
         <div className="login-brand">
-          <span className="login-logo">CT</span>
-          <h1 className="login-title">CodeTrack</h1>
+           
+                  <img className="logo-img" src={logo} alt="Code Track Logo" />
+      
           <p className="login-subtitle">Track your DSA journey</p>
         </div>
 

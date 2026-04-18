@@ -32,8 +32,6 @@ const ProblemDetail = () => {
 
   return (
     <div className="detail-wrapper">
-      <button className="back-btn" onClick={() => navigate('/all-problems')}>← Back to Problems</button>
-
       <div className="detail-header">
         <h1 className="detail-title">{problem.title}</h1>
         <button className="detail-edit-btn" onClick={() => navigate(`/add-problem?edit=${problem._id}`)}>
