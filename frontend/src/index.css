@@ -17,3 +17,46 @@ body {
   padding: 36px 40px;
   overflow-y: auto;
 }
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px 12px;
+  }
+  
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    flex-direction: row;
+    padding: 12px;
+    border-bottom: 1px solid #30363d;
+    border-right: none;
+  }
+  
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 6px;
+    flex: 0.5;
+    overflow-x: auto;
+  }
+  
+  .nav-item {
+    font-size: 14px;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 12px 8px;
+  }
+  
+  .nav-item {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+}

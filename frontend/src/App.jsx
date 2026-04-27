@@ -10,6 +10,7 @@ import ProblemSets from './pages/ProblemSets';
 import ProblemDetail from './pages/ProblemDetail';
 import Profile from './pages/Profile';
 import ViewProblems from './ProblemSets/ViewProblems';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
 const AppLayout = ({ children }) => (
@@ -25,8 +26,10 @@ const P = ({ children }) => (
 
 function App() {
   return (
+  <ErrorBoundary>
     <AuthProvider>
       <BrowserRouter>
+      
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<P><Home /></P>} />
@@ -40,6 +43,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+  </ErrorBoundary>
   );
 }
 
