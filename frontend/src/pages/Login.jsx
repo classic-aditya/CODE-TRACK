@@ -1,69 +1,68 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import logo from '../assets/Code_Tracker.jpeg';
-import './Login.css';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import logo from '../assets/Code_Tracker.jpeg'
+import './Login.css'
 
-const Login = () => {
-  const { login, register, loginWithGoogle } = useAuth();
-  const navigate = useNavigate();
-  const [isRegister, setIsRegister] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+function Login() {
+  const { login, register, loginWithGoogle } = useAuth()
+  const navigate = useNavigate()
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const [isRegister, setIsRegister] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
     try {
       if (isRegister) {
-        await register(form.email, form.password, form.name);
+        await register(email, password, name)
       } else {
-        await login(form.email, form.password);
+        await login(email, password)
       }
-      navigate('/');
+      navigate('/')
     } catch (err) {
-      setError(err.message.replace('Firebase: ', '').replace(/\(auth.*\)/, '').trim());
-    } finally {
-      setLoading(false);
+      let msg = err.message
+      msg = msg.replace('Firebase: ', '')
+      msg = msg.replace(/\(auth.*\)/, '').trim()
+      setError(msg)
     }
-  };
+    setLoading(false)
+  }
 
-  const handleGoogle = async () => {
-    setError('');
+  async function handleGoogle() {
+    setError('')
     try {
-      await loginWithGoogle();
-      navigate('/');
+      await loginWithGoogle()
+      navigate('/')
     } catch (err) {
-      setError('Google sign-in failed. Try again.');
+      setError('Google sign-in failed. Try again.')
     }
-  };
-
-  const {name, email, password} = form;
+  }
 
   return (
     <div className="login-page">
       <div className="login-card">
         <div className="login-brand">
-           
-                  <img className="logo-img" src={logo} alt="Code Track Logo" />
-      
+          <img className="logo-img" src={logo} alt="Code Track Logo" />
           <p className="login-subtitle">Track your DSA journey</p>
         </div>
 
         <div className="login-tabs">
           <button
-            className={`tab-btn ${!isRegister ? 'active' : ''}`}
-            onClick={() => { setIsRegister(false); setError(''); }}
+            className={!isRegister ? 'tab-btn active' : 'tab-btn'}
+            onClick={() => { setIsRegister(false); setError('') }}
           >
             Login
           </button>
           <button
-            className={`tab-btn ${isRegister ? 'active' : ''}`}
-            onClick={() => { setIsRegister(true); setError(''); }}
+            className={isRegister ? 'tab-btn active' : 'tab-btn'}
+            onClick={() => { setIsRegister(true); setError('') }}
           >
             Register
           </button>
@@ -74,38 +73,41 @@ const Login = () => {
             <input
               className="login-input"
               type="text"
-              name="name"
               placeholder="Full Name"
               value={name}
-              onChange={handleChange}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           )}
+
           <input
             className="login-input"
             type="email"
-            name="email"
             placeholder="Email"
             value={email}
-            onChange={handleChange}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
+
           <input
             className="login-input"
             type="password"
-            name="password"
             placeholder="Password"
             value={password}
-            onChange={handleChange}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
+
           {error && <p className="login-error">{error}</p>}
+
           <button className="login-btn-primary" type="submit" disabled={loading}>
             {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Login'}
           </button>
         </form>
 
-        <div className="login-divider"><span>or</span></div>
+        <div className="login-divider">
+          <span>or</span>
+        </div>
 
         <button className="login-btn-google" onClick={handleGoogle}>
           <svg width="18" height="18" viewBox="0 0 48 48">
@@ -118,7 +120,7 @@ const Login = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

@@ -1,28 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ProblemTable from '../components/ProblemTable';
-import { getProblems } from '../services/api';
-import './AllProblems.css';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ProblemTable from '../components/ProblemTable'
+import { getProblems } from '../services/api'
+import './AllProblems.css'
 
-const AllProblems = () => {
-  const navigate = useNavigate();
-  const [problems, setProblems] = useState([]);
-  const [loading, setLoading] = useState(true);
+function AllProblems() {
+  const navigate = useNavigate()
+  const [problems, setProblems] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const fetchProblems = async () => {
+  async function fetchProblems() {
     try {
-      const res = await getProblems();
-      setProblems(res.data?.data || res.data || []); 
-    } catch {
-      alert('Failed to load problems.');
-    } finally {
-      setLoading(false);
+      const res = await getProblems()
+      const data = res.data?.data || res.data || []
+      setProblems(data)
+    } catch (err) {
+      alert('Failed to load problems.')
     }
-  };
+    setLoading(false)
+  }
 
-  useEffect(() => { fetchProblems(); }, []);
+  useEffect(() => {
+    fetchProblems()
+  }, [])
 
-  const handleDelete = (id) => setProblems((prev) => prev.filter((p) => p._id !== id));
+  function handleDelete(id) {
+    setProblems(function(prev) {
+      return prev.filter(function(p) { return p._id !== id })
+    })
+  }
 
   return (
     <div className="all-problems-wrapper">
@@ -35,13 +41,14 @@ const AllProblems = () => {
           + Add Problem
         </button>
       </header>
+
       {loading ? (
         <div className="loading-text">Loading problems...</div>
       ) : (
         <ProblemTable problems={problems} onDelete={handleDelete} />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AllProblems;
+export default AllProblems

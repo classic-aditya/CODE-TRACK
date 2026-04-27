@@ -1,17 +1,20 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 class ErrorBoundary extends Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
+    super(props)
+    this.state = {
+      hasError: false,
+      error: null
+    }
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, error };
+    return { hasError: true, error: error }
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('Error caught:', error, errorInfo);
+  componentDidCatch(error, info) {
+    console.error('something crashed:', error, info)
   }
 
   render() {
@@ -20,11 +23,11 @@ class ErrorBoundary extends Component {
         <div style={{ padding: '40px', textAlign: 'center' }}>
           <h2>Something went wrong</h2>
           <p style={{ color: '#6b7280' }}>
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message || 'An unexpected error occured'}
           </p>
-          <button 
+          <button
             onClick={() => this.setState({ hasError: false })}
-            style={{ 
+            style={{
               marginTop: '16px',
               padding: '8px 16px',
               background: 'blue',
@@ -37,10 +40,11 @@ class ErrorBoundary extends Component {
             Try Again
           </button>
         </div>
-      );
+      )
     }
-    return this.props.children;
+
+    return this.props.children
   }
 }
 
-export default ErrorBoundary;
+export default ErrorBoundary

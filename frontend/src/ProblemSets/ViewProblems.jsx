@@ -1,77 +1,84 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getProblemSetById, getProblems, addProblemToSet, removeProblemFromSet } from '../services/api';
-import ProblemTable from '../components/ProblemTable';
-import './ViewProblems.css';
+import { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { getProblemSetById, getProblems, addProblemToSet, removeProblemFromSet } from '../services/api'
+import ProblemTable from '../components/ProblemTable'
+import './ViewProblems.css'
 
-const ViewProblems = () => {
-  const { setId } = useParams();
-  const navigate = useNavigate();
-  const [set, setSet] = useState(null);
-  const [allProblems, setAllProblems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [adding, setAdding] = useState(false);
+function ViewProblems() {
+  const { setId } = useParams()
+  const navigate = useNavigate()
 
-  const fetchSet = async () => {
+  const [set, setSet] = useState(null)
+  const [allProblems, setAllProblems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [adding, setAdding] = useState(false)
+
+  async function fetchSet() {
     try {
-      const res = await getProblemSetById(setId);
-      setSet(res.data.data);
-    } catch {
-      alert('Failed to load problem set.');
-      navigate('/problem-sets');
+      const res = await getProblemSetById(setId)
+      setSet(res.data.data)
+    } catch (err) {
+      alert('Failed to load problem set.')
+      navigate('/problem-sets')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchSet();
-    getProblems().then((res) => setAllProblems(res.data.data));
-  }, [setId]);
+    fetchSet()
+    getProblems().then(function(res) {
+      setAllProblems(res.data.data)
+    })
+  }, [setId])
 
-  const handleAdd = async (problemId) => {
-    setAdding(true);
+  async function handleAdd(problemId) {
+    setAdding(true)
     try {
-      await addProblemToSet(setId, problemId);
-      await fetchSet();
-      setSearchQuery('');
-    } catch {
-      alert('Failed to add problem to set.');
-    } finally {
-      setAdding(false);
+      await addProblemToSet(setId, problemId)
+      await fetchSet()
+      setSearchQuery('')
+    } catch (err) {
+      alert('Failed to add problem to set.')
     }
-  };
+    setAdding(false)
+  }
 
-  const handleRemove = async (problemId) => {
-    if (!window.confirm('Remove this problem from the set?')) return;
+  async function handleRemove(problemId) {
+    if (!window.confirm('Remove this problem from the set?')) return
     try {
-      await removeProblemFromSet(setId, problemId);
-      setSet((prev) => ({
-        ...prev,
-        problems: prev.problems.filter((p) => p._id !== problemId),
-      }));
-    } catch {
-      alert('Failed to remove problem.');
+      await removeProblemFromSet(setId, problemId)
+      setSet(function(prev) {
+        return {
+          ...prev,
+          problems: prev.problems.filter(function(p) { return p._id !== problemId })
+        }
+      })
+    } catch (err) {
+      alert('Failed to remove problem.')
     }
-  };
+  }
 
-  // Problems not yet in the set
-  const setIds = new Set((set?.problems || []).map((p) => p._id));
-  const available = allProblems.filter((p) => !setIds.has(p._id));
+  const setProblemsIds = new Set((set?.problems || []).map(function(p) { return p._id }))
+  const available = allProblems.filter(function(p) { return !setProblemsIds.has(p._id) })
 
-  // Filter available problems by search query
   const searchFiltered = searchQuery.trim()
-    ? available.filter((p) =>
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (p.tags || []).some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        p.platform?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.difficulty?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : available;
+    ? available.filter(function(p) {
+        const q = searchQuery.toLowerCase()
+        return (
+          p.title.toLowerCase().includes(q) ||
+          (p.tags || []).some(function(t) { return t.toLowerCase().includes(q) }) ||
+          (p.platform || '').toLowerCase().includes(q) ||
+          (p.difficulty || '').toLowerCase().includes(q)
+        )
+      })
+    : available
 
-  if (loading) return <div className="loading-text">Loading...</div>;
+  if (loading) {
+    return <div className="loading-text">Loading...</div>
+  }
 
   return (
     <div className="view-problems-wrapper">
@@ -93,10 +100,10 @@ const ViewProblems = () => {
 
       {showAddModal && (
         <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
-          <div className="modal-card modal-wide" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-card modal-wide" onClick={function(e) { e.stopPropagation() }}>
             <div className="modal-header">
               <h2 className="modal-title">Add Problem to Set</h2>
-              <button className="modal-close" onClick={() => setShowAddModal(false)}>✕</button>
+              <button className="modal-close" onClick={() => setShowAddModal(false)}>x</button>
             </div>
 
             <input
@@ -114,34 +121,36 @@ const ViewProblems = () => {
               ) : searchFiltered.length === 0 ? (
                 <p className="modal-empty">No problems match "{searchQuery}"</p>
               ) : (
-                searchFiltered.map((p) => (
-                  <div key={p._id} className="modal-problem-row">
-                    <div className="modal-problem-info">
-                      <span className="modal-problem-title">{p.title}</span>
-                      <div className="modal-problem-meta">
-                        <span className={`badge platform-${p.platform}`}>{p.platform}</span>
-                        <span className={`badge diff-${p.difficulty}`}>{p.difficulty}</span>
-                        {(p.tags || []).slice(0, 3).map((t) => (
-                          <span key={t} className="modal-tag">#{t}</span>
-                        ))}
+                searchFiltered.map(function(p) {
+                  return (
+                    <div key={p._id} className="modal-problem-row">
+                      <div className="modal-problem-info">
+                        <span className="modal-problem-title">{p.title}</span>
+                        <div className="modal-problem-meta">
+                          <span className={'badge platform-' + p.platform}>{p.platform}</span>
+                          <span className={'badge diff-' + p.difficulty}>{p.difficulty}</span>
+                          {(p.tags || []).slice(0, 3).map(function(t) {
+                            return <span key={t} className="modal-tag">#{t}</span>
+                          })}
+                        </div>
                       </div>
+                      <button
+                        className="modal-add-btn"
+                        disabled={adding}
+                        onClick={() => handleAdd(p._id)}
+                      >
+                        + Add
+                      </button>
                     </div>
-                    <button
-                      className="modal-add-btn"
-                      disabled={adding}
-                      onClick={() => handleAdd(p._id)}
-                    >
-                      + Add
-                    </button>
-                  </div>
-                ))
+                  )
+                })
               )}
             </div>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ViewProblems;
+export default ViewProblems

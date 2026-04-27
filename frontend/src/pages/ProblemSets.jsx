@@ -1,47 +1,52 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createProblemSet, getProblemSets, deleteProblemSet } from '../services/api';
-import './ProblemSets.css';
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { createProblemSet, getProblemSets, deleteProblemSet } from '../services/api'
+import './ProblemSets.css'
 
-const ProblemSets = () => {
-  const [sets, setSets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '' });
-  const [creating, setCreating] = useState(false);
+function ProblemSets() {
+  const [sets, setSets] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [newSetName, setNewSetName] = useState('')
+  const [newSetDesc, setNewSetDesc] = useState('')
+  const [creating, setCreating] = useState(false)
 
   useEffect(() => {
-    getProblemSets()
-      .then((res) => setSets(res.data.data))
-      .catch(() => alert('Failed to load problem sets.'))
-      .finally(() => setLoading(false));
-  }, []);
+    getProblemSets().then(function(res) {
+      setSets(res.data.data)
+    }).catch(function() {
+      alert('Failed to load problem sets.')
+    }).finally(function() {
+      setLoading(false)
+    })
+  }, [])
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    if (!form.name.trim()) return;
-    setCreating(true);
-    try {
-      const res = await createProblemSet(form);
-      setSets([...sets, res.data.data]);
-      setForm({ name: '', description: '' });
-      setShowModal(false);
-    } catch {
-      alert('Failed to create problem set.');
-    } finally {
-      setCreating(false);
-    }
-  };
+  async function handleCreate(e) {
+    e.preventDefault()
+    if (!newSetName.trim()) return
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this problem set?')) return;
+    setCreating(true)
     try {
-      await deleteProblemSet(id);
-      setSets(sets.filter((s) => s._id !== id));
-    } catch {
-      alert('Failed to delete.');
+      const res = await createProblemSet({ name: newSetName, description: newSetDesc })
+      setSets([...sets, res.data.data])
+      setNewSetName('')
+      setNewSetDesc('')
+      setShowModal(false)
+    } catch (err) {
+      alert('Failed to create problem set.')
     }
-  };
+    setCreating(false)
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm('Delete this problem set?')) return
+    try {
+      await deleteProblemSet(id)
+      setSets(sets.filter(function(s) { return s._id !== id }))
+    } catch (err) {
+      alert('Failed to delete.')
+    }
+  }
 
   return (
     <div className="problem-sets-wrapper">
@@ -62,37 +67,41 @@ const ProblemSets = () => {
           {sets.length === 0 && (
             <p style={{ color: '#6b7280' }}>No problem sets yet. Create one!</p>
           )}
-          {sets.map((set) => (
-            <div className="set-card" key={set._id}>
-              <div className="set-card-header">
-                <h3 className="set-title">{set.name}</h3>
-                <button
-                  className="set-delete-btn"
-                  onClick={() => handleDelete(set._id)}
-                  title="Delete set"
-                >X</button>
+          {sets.map(function(set) {
+            return (
+              <div className="set-card" key={set._id}>
+                <div className="set-card-header">
+                  <h3 className="set-title">{set.name}</h3>
+                  <button
+                    className="set-delete-btn"
+                    onClick={() => handleDelete(set._id)}
+                    title="Delete set"
+                  >
+                    X
+                  </button>
+                </div>
+                <p className="set-desc">{set.description || 'No description.'}</p>
+                <p className="set-count">{(set.problems || []).length} Problems</p>
+                <Link to={'/problem-sets/' + set._id}>
+                  <button className="view-set-btn">View Problems</button>
+                </Link>
               </div>
-              <p className="set-desc">{set.description || 'No description.'}</p>
-              <p className="set-count">{(set.problems || []).length} Problems</p>
-              <Link to={`/problem-sets/${set._id}`}>
-                <button className="view-set-btn">View Problems</button>
-              </Link>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-card" onClick={function(e) { e.stopPropagation() }}>
             <h2 className="modal-title">Create Problem Set</h2>
             <form onSubmit={handleCreate}>
               <input
                 type="text"
                 className="modal-input"
                 placeholder="Set name (e.g. Interview Questions)"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                value={newSetName}
+                onChange={(e) => setNewSetName(e.target.value)}
                 required
                 autoFocus
               />
@@ -100,11 +109,13 @@ const ProblemSets = () => {
                 type="text"
                 className="modal-input"
                 placeholder="Description (optional)"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                value={newSetDesc}
+                onChange={(e) => setNewSetDesc(e.target.value)}
               />
               <div className="modal-actions">
-                <button type="button" className="modal-cancel" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" className="modal-cancel" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
                 <button type="submit" className="modal-submit" disabled={creating}>
                   {creating ? 'Creating...' : 'Create'}
                 </button>
@@ -114,7 +125,7 @@ const ProblemSets = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ProblemSets;
+export default ProblemSets
