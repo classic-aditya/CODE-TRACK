@@ -1,14 +1,14 @@
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/ApiError")
 
-const errorMiddleware = (err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+function errorMiddleware(err, req, res, next) {
+  let statusCode = err.statusCode || 500
+  let message = err.message || "Internal Server Error"
 
   res.status(statusCode).json({
     success: false,
-    statusCode,
-    message,
-  });
-};
+    statusCode: statusCode,
+    message: message,
+  })
+}
 
-module.exports = errorMiddleware;
+module.exports = errorMiddleware

@@ -1,17 +1,12 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getAllProblems,
-  getProblemById,
-  createProblem,
-  updateProblem,
-  deleteProblem,
-} = require("../controllers/problem.controller");
+const express = require("express")
+const router = express.Router()
 
-router.get("/", getAllProblems);
-router.get("/:id", getProblemById);
-router.post("/", createProblem);
-router.put("/:id", updateProblem);
-router.delete("/:id", deleteProblem);
+const problemController = require("../controllers/problem.controller")
 
-module.exports = router;
+router.get("/", problemController.getAllProblems)
+router.get("/:id", problemController.getProblemById)
+router.post("/", problemController.createProblem)
+router.put("/:id", problemController.updateProblem)
+router.delete("/:id", problemController.deleteProblem)
+
+module.exports = router

@@ -1,20 +1,26 @@
-const express = require("express");
-const cors = require("cors");
-const errorMiddleware = require("./middlewares/error.middleware");
-const problemRoutes = require("./routes/problem.routes");
-const problemSetRoutes = require("./routes/problemset.routes");
+const express = require("express")
+const cors = require("cors")
+const errorMiddleware = require("./middlewares/error.middleware")
+const problemRoutes = require("./routes/problem.routes")
+const problemSetRoutes = require("./routes/problemset.routes")
 
-const app = express();
+const app = express()
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}))
 
-app.get("/", (req, res) => res.json({ message: "api running" }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-app.use("/api/problems", problemRoutes);
-app.use("/api/problem-sets", problemSetRoutes);
+app.get("/", (req, res) => {
+  res.json({ message: "api is running" })
+})
 
-app.use(errorMiddleware);
+app.use("/api/problems", problemRoutes)
+app.use("/api/problem-sets", problemSetRoutes)
 
-module.exports = app;
+app.use(errorMiddleware)
+
+module.exports = app

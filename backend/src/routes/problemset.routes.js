@@ -1,21 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getAllProblemSets,
-  getProblemSetById,
-  createProblemSet,
-  updateProblemSet,
-  deleteProblemSet,
-  addProblemToSet,
-  removeProblemFromSet,
-} = require("../controllers/problemset.controller");
+const express = require("express")
+const router = express.Router()
 
-router.get("/", getAllProblemSets);
-router.get("/:id", getProblemSetById);
-router.post("/", createProblemSet);
-router.put("/:id", updateProblemSet);
-router.delete("/:id", deleteProblemSet);
-router.post("/:id/add-problem", addProblemToSet);
-router.delete("/:id/remove-problem/:problemId", removeProblemFromSet);
+const problemSetController = require("../controllers/problemset.controller")
 
-module.exports = router;
+router.get("/", problemSetController.getAllProblemSets)
+router.get("/:id", problemSetController.getProblemSetById)
+router.post("/", problemSetController.createProblemSet)
+router.put("/:id", problemSetController.updateProblemSet)
+router.delete("/:id", problemSetController.deleteProblemSet)
+router.post("/:id/add-problem", problemSetController.addProblemToSet)
+router.delete("/:id/remove-problem/:problemId", problemSetController.removeProblemFromSet)
+
+module.exports = router
