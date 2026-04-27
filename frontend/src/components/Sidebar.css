@@ -1,3 +1,27 @@
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px 12px;
+  }
+  
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    flex-direction: row;
+    padding: 12px;
+    border-bottom: 1px solid #30363d;
+    border-right: none;
+  }
+  
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 8px;
+    flex: 1;
+  }
+}
 .sidebar {
   width: 260px;
   min-height: 100vh;

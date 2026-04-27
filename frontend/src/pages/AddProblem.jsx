@@ -28,18 +28,44 @@ const AddProblem = () => {
   }, [location.search]);
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const validateForm = () => {
+  if (!form.title.trim()) {
+    alert('Please enter a problem title');
+    return false;
+  }
+  
+  
+  if (form.problemLink.trim()) {
     try {
-      isEditing ? await updateProblem(editId, form) : await createProblem(form);
-      navigate('/all-problems');
-    } catch (err) {
-      alert(err.response?.data?.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
+      new URL(form.problemLink);
+    } catch {
+      alert('Please enter a valid URL for problem link');
+      return false;
     }
-  };
+  }
+  if (form.tags.length === 0) {
+    alert('Please add at least one tag');
+    return false;
+  }
+  
+  return true;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (!validateForm()) return;
+  
+  setLoading(true);
+  try {
+    isEditing ? await updateProblem(editId, form) : await createProblem(form);
+    navigate('/all-problems');
+  } catch (err) {
+    alert(err.response?.data?.message || 'Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
   const handleTags = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
